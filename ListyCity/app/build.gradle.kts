@@ -1,3 +1,10 @@
+import java.util.Properties
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if(localPropertiesFile.exists()) {
+ localProperties.load(localPropertiesFile.inputStream())
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -21,6 +28,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val secretText = localProperties.getProperty("firebase_API_key") ?: "\"\""
+        buildConfigField("String", "firebase_API_key", secretText)
     }
 
     buildTypes {
@@ -38,6 +48,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
